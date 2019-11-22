@@ -7,13 +7,18 @@ import podman
 client = podman.Client()
 pull = client.images.pull("fedora:latest")
 image = client.images.get(pull)
+
 opts = {
     'memory': '1G',
     'memory-reservation': '750M',
     'Memory-swap': '1.5G',
+    'detach': True,
+    'tty': True,
+    'command': '/bin/bash'
     }
-container = image.create(detach=True, tty=True, command=['/bin/bash'])
+container = image.create(**opts)
 container.attach(eot=4)
+
 try:
     container.start()
     print()
